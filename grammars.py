@@ -42,6 +42,26 @@ categorize the node as LHS.
     exp ::= BinOp(exp, Sub(), exp)
 """
 
+## Non-terminal
+"""
+stmt -> statements
+
+    stmt ::= Expr(Call(Name("print"), [exp]))
+This statement print the value that is produced in the exp.
+
+    stmt ::= Expr(exp)
+This statement evaluate the exp and does nothing.
+"""
+
+# Final grammar rule for L(int)
+"""
+    L(int) ::= Module(stmt*)
+* means that it is a list of statement.
+"""
+class Module:
+    def __init__(self, body) -> None:
+        self.stmt = body
+
 ## Application of rules 
 """
 Using First rule and Second rule, we can represent

@@ -1,0 +1,36 @@
+name: Create Commit ID File
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create_commit_id_file:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Get the commit ID
+        id: get_commit
+        run: echo "::set-output name=commit_id::$(git rev-parse HEAD)"
+
+      - name: Create file with commit ID
+        run: |
+          COMMIT_ID=${{ steps.get_commit.outputs.commit_id }}
+          echo "This file is created for commit $COMMIT_ID" > $COMMIT_ID.txt
+
+      - name: Configure Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Commit and push file
+        run: |
+          git add $COMMIT_ID.txt
+          git commit -m "Add commit ID file for $COMMIT_ID"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
