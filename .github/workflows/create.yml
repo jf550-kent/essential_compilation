@@ -15,12 +15,11 @@ jobs:
 
       - name: Get the commit ID
         id: get_commit
-        run: echo "::set-output name=commit_id::$(git rev-parse HEAD)"
+        run: echo "commit_id=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
       - name: Create file with commit ID
         run: |
-          COMMIT_ID=${{ steps.get_commit.outputs.commit_id }}
-          echo "This file is created for commit $COMMIT_ID" > $COMMIT_ID.txt
+          echo "This file is created for commit $commit_id" > $commit_id.txt
 
       - name: Configure Git
         run: |
@@ -29,8 +28,8 @@ jobs:
 
       - name: Commit and push file
         run: |
-          git add $COMMIT_ID.txt
-          git commit -m "Add commit ID file for $COMMIT_ID"
+          git add $commit_id.txt
+          git commit -m "Add commit ID file for $commit_id"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
