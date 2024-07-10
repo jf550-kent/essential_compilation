@@ -1,30 +1,17 @@
-name: Create Commit ID File
-
-on:
-  push:
-    branches:
-      - main
-
+name: Push commit
+on: push
+permissions:
+  contents: write
 jobs:
-  create_commit_id_file:
+  report:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Get the commit ID
-        id: get_commit
-        run: echo "commit_id=$(git rev-parse HEAD)" >> $GITHUB_ENV
-
-      - name: Create file with commit ID
+      - uses: actions/checkout@v3
+      - name: Create report file
+        run: date +%s > report.txt
+      - name: Commit report
         run: |
-          echo "This file is created for commit $commit_id" > $commit_id.txt
-
-      - name: Commit and push file
-        run: |
-          git add .
-          git commit -m "Add commit ID file for $commit_id"
+          git config --global user.name 'Your Name'
+          git config --global user.email 'your-username@users.noreply.github.com'
+          git commit -am "Automated report"
           git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
