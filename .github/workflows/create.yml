@@ -21,14 +21,9 @@ jobs:
         run: |
           echo "This file is created for commit $commit_id" > $commit_id.txt
 
-      - name: Configure Git
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-
       - name: Commit and push file
         run: |
-          git add $commit_id.txt
+          git add .
           git commit -m "Add commit ID file for $commit_id"
           git push
         env:
